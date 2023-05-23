@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GPA Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    h1 {
+      text-align: center;
+    }
+    .container {
+      margin: 0 auto;
+      width: 300px;
+    }
+    .form-group {
+      margin-bottom: 10px;
+    }
+    label {
+      display: block;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 5px;
+    }
+    button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    #result {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>GPA Calculator</h1>
+  <div class="container">
+    <div class="form-group">
+      <label for="subject1">Subject 1 (Nepali):</label>
+      <input type="number" id="subject1_theory" min="0" max="100" required placeholder="Theory marks">
+      <input type="number" id="subject1_practical" min="0" max="100" required placeholder="Practical marks">
+    </div>
+    <div class="form-group">
+      <label for="subject2">Subject 2 (English):</label>
+      <input type="number" id="subject2_theory" min="0" max="100" required placeholder="Theory marks">
+      <input type="number" id="subject2_practical" min="0" max="100" required placeholder="Practical marks">
+    </div>
+    <div class="form-group">
+      <label for="subject3">Subject 3 (Physics):</label>
+      <input type="number" id="subject3_theory" min="0" max="100" required placeholder="Theory marks">
+      <input type="number" id="subject3_practical" min="0" max="100" required placeholder="Practical marks">
+    </div>
+    <div class="form-group">
+      <label for="subject4">Subject 4 (Math):</label>
+      <input type="number" id="subject4_theory" min="0" max="100" required placeholder="Theory marks">
+      <input type="number" id="subject4_practical" min="0" max="100" required placeholder="Practical marks">
+    </div>
+    <div class="form-group">
+      <label for="subject5">Subject 5 (Chemistry):</label>
+      <input type="number" id="subject5_theory" min="0" max="100" required placeholder="Theory marks">
+      <input type="number" id="subject5_practical" min="0" max="100" required placeholder="Practical marks">
+    </div>
+    <div class="form-group">
+      <label for="subject6">Subject 6 (Biology/Computer):</label>
+      <input type="number" id="subject6_theory" min="0" max="100" required placeholder="Theory marks">
+      <input type="number" id="subject6_practical" min="0" max="100" required placeholder="Practical marks">
+    </div>
+    <button onclick="calculateGPA()">Calculate GPA</button>
+    <div id="result"></div>
+  </div>
+  
+  <script>
+    function calculateGPA() {
+      var subject1_theory = parseFloat(document.getElementById('subject1_theory').value);
+      var subject1_practical = parseFloat(document.getElementById('subject1_practical').value);
+      var subject2_theory = parseFloat(document.getElementById('subject2_theory').value);
+      var subject2_practical = parseFloat(document.getElementById('subject2_practical').value);
+      var subject3_theory = parseFloat(document.getElementById('subject3_theory').value);
+      var subject3_practical = parseFloat(document.getElementById('subject3_practical').value);
+      var subject4_theory = parseFloat(document.getElementById('subject4_theory').value);
+      var subject4_practical = parseFloat(document.getElementById('subject4_practical').value);
+      var subject5_theory = parseFloat(document.getElementById('subject5_theory').value);
+      var subject5_practical = parseFloat(document.getElementById('subject5_practical').value);
+      var subject6_theory = parseFloat(document.getElementById('subject6_theory').value);
+      var subject6_practical = parseFloat(document.getElementById('subject6_practical').value);
+      
+      // Grade scale and GPA conversion
+      var gradeScale = [
+        { grade: "A+", gpa: 4.0, min: 90, max: 100 },
+        { grade: "A", gpa: 3.6, min: 80, max: 90 },
+        { grade: "B+", gpa: 3.2, min: 70, max: 80 },
+        { grade: "B", gpa: 2.8, min: 60, max: 70 },
+        { grade: "C+", gpa: 2.4, min: 50, max: 60 },
+        { grade: "C", gpa: 2.0, min: 40, max: 50 },
+        { grade: "D", gpa: 1.6, min: 35, max: 40 },
+        { grade: "NG", gpa: 0, min: 0, max: 35 }
+      ];
+      
+      // Subject credit hours
+      var creditHours = [
+        { subject: "Nepali", credit: 3 },
+        { subject: "English", credit: 4 },
+        { subject: "Physics", credit: 5 },
+        { subject: "Math", credit: 5 },
+        { subject: "Chemistry", credit: 5 },
+        { subject: "Biology/Computer", credit: 5 }
+      ];
+      
+      // Calculate total grade points and total credit hours
+      var totalGradePoints = 0;
+      var totalCreditHours = 0;
+      
+      // Calculate GPA for each subject
+      function calculateSubjectGPA(theoryMarks, practicalMarks, subjectCredit) {
+        var totalMarks = theoryMarks + practicalMarks;
+        var subjectGPA = 0;
+        
+        for (var i = 0; i < gradeScale.length; i++) {
+          if (totalMarks >= gradeScale[i].min && totalMarks <= gradeScale[i].max) {
+            subjectGPA = gradeScale[i].gpa;
+            break;
+          }
+        }
+        
+        var subjectGradePoints = subjectGPA * subjectCredit;
+        totalGradePoints += subjectGradePoints;
+        totalCreditHours += subjectCredit;
+      }
+      
+      // Calculate GPA for each subject
+      calculateSubjectGPA(subject1_theory, subject1_practical, creditHours[0].credit);
+      calculateSubjectGPA(subject2_theory, subject2_practical, creditHours[1].credit);
+      calculateSubjectGPA(subject3_theory, subject3_practical, creditHours[2].credit);
+      calculateSubjectGPA(subject4_theory, subject4_practical, creditHours[3].credit);
+      calculateSubjectGPA(subject5_theory, subject5_practical, creditHours[4].credit);
+      
+      // Special case for Biology/Computer subject
+      var biologyComputerTheoryMarks = subject6_theory;
+      var biologyComputerPracticalMarks = subject6_practical;
+      var biologyComputerCredit = creditHours[5].credit;
+      var biologyComputerGPA = 0;
+      
+      if (biologyComputerTheoryMarks >= 75 && biologyComputerPracticalMarks >= 25) {
+        biologyComputerGPA = 4.0;
+      } else {
+        biologyComputerGPA = 0;
+      }
+      
+      var biologyComputerGradePoints = biologyComputerGPA * biologyComputerCredit;
+      totalGradePoints += biologyComputerGradePoints;
+      totalCreditHours += biologyComputerCredit;
+      
+      // Calculate overall GPA
+      var gpa = totalGradePoints / totalCreditHours;
+      
+      document.getElementById('result').innerHTML = "Your GPA: " + gpa.toFixed(2);
+    }
+  </script>
+</body>
+</html>
